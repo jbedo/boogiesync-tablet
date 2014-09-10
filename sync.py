@@ -65,5 +65,5 @@ except KeyboardInterrupt:
 
 usb.util.release_interface(dev, 0)
 usb.util.release_interface(dev, 1)
-dev.attach_kernel_driver(dev, 0)
-dev.attach_kernel_driver(dev, 1)
+dev.attach_kernel_driver(0)
+dev.attach_kernel_driver(1)
