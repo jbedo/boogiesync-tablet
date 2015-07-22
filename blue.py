@@ -49,10 +49,10 @@ else:
 
 # Configure UInput device
 # Maximum position possible
-minxpos = 24
-minypos = 232
-maxxpos = 19990
-maxypos = 13786
+minxpos = 60
+minypos = 135
+maxxpos = 19993
+maxypos = 13847
 minpressure = 0 # 19
 maxpressure = 255
 
