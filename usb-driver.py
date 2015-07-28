@@ -23,9 +23,11 @@ if dev.is_kernel_driver_active(0):
 payload = '\x05\x00\x03'
 while True:
     try:
-        assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload) == len(payload)
+        assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload, 100) == len(payload)
         break
-    except:
+    except usb.USBError, err:
+    	if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
+    		raise err
         print 'payload transfer failed, retrying'
 print 'Payload sent'
 
