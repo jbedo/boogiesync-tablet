@@ -16,12 +16,17 @@ if dev.is_kernel_driver_active(0):
         dev.attach_kernel_driver(1)
 
 #dev.set_configuration()
-usb.util.claim_interface(dev, 1)
-usb.util.claim_interface(dev, 0)
+#usb.util.claim_interface(dev, 1)
+#usb.util.claim_interface(dev, 0)
 
 # knock into tablet mode
-payload = '\x05\x05\x00\x03'
-assert dev.ctrl_transfer(0x21, 9, 0x0305, 1, payload) == len(payload)
+payload = '\x05\x00\x03'
+while True:
+    try:
+        assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload) == len(payload)
+        break
+    except:
+        print 'payload transfer failed, retrying'
 print 'Payload sent'
 
 # Pull out interrupt endpoint
@@ -30,8 +35,11 @@ intf = cfg[(1,0)]
 ep = intf[0]
 
 # Maximum position possible
+minxpos = 0
+minypos = 0
 maxxpos = 19780
 maxypos = 13442
+minpressure = 0
 maxpressure = 255
 
 # Initialise UInput device
@@ -40,9 +48,9 @@ cap = {
     e.EV_ABS : [
         # N.B.: There appears to be a mapping bug here; setting min to max results in
         # setting max when reading back ui capabilities.
-        (e.ABS_PRESSURE, AbsInfo(value=0, min=maxpressure, max=0, fuzz=0, flat=0, resolution=0)),
-        (e.ABS_X, AbsInfo(value=0, min=maxxpos, max=0, fuzz=0, flat=0, resolution=0)),
-        (e.ABS_Y, AbsInfo(value=0, min=maxypos, max=0, fuzz=0, flat=0, resolution=0))]
+        (e.ABS_PRESSURE, AbsInfo(value=minpressure, min=maxpressure, max=0, fuzz=0, flat=0, resolution=0)),
+        (e.ABS_X, AbsInfo(value=minxpos, min=maxxpos, max=0, fuzz=0, flat=0, resolution=0)),
+        (e.ABS_Y, AbsInfo(value=minypos, min=maxypos, max=0, fuzz=0, flat=0, resolution=0))]
 }
 ui = UInput(cap, name='boogie-board-sync')
 
@@ -51,6 +59,20 @@ try:
         data = ep.read(8, -1)
         xpos = data[1] | data[2] << 8
         ypos = data[3] | data[4] << 8
+
+        if xpos < minxpos:
+            minxpos = xpos
+            print 'updated minxpos to %d' % minxpos
+        if xpos > maxxpos:
+            maxxpos = xpos
+            print 'updated maxxpos to %d' % maxxpos
+        if ypos < minypos:
+            minypos = ypos
+            print 'updated minypos to %d' % minypos
+        if ypos > maxypos:
+            maxypos = ypos
+            print 'updated maxypos to %d' % maxypos
+
         pressure = data[5] | data[6] << 8
         touch = data[7] & 0x01
         stylus = (data[7] & 0x02)>>1
