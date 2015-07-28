@@ -58,7 +58,13 @@ ui = UInput(cap, name='boogie-board-sync')
 
 try:
     while True:
-        data = ep.read(8, -1)
+    	try:
+        	data = ep.read(8, 100)
+        except usb.USBError, err:
+        	if err.args != (110, 'Operation timed out'):
+        		raise err
+        	continue
+
         xpos = data[1] | data[2] << 8
         ypos = data[3] | data[4] << 8
 
