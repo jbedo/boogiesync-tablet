@@ -54,7 +54,7 @@ cap = {
         (e.ABS_X, AbsInfo(value=minxpos, min=maxxpos, max=0, fuzz=0, flat=0, resolution=0)),
         (e.ABS_Y, AbsInfo(value=minypos, min=maxypos, max=0, fuzz=0, flat=0, resolution=0))]
 }
-ui = UInput(cap, name='boogie-board-sync')
+ui = UInput(cap, name='boogie-board-sync-pen')
 
 try:
     while True:
