@@ -25,7 +25,7 @@ while True:
     try:
         assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload, 100) == len(payload)
         break
-    except usb.USBError, err:
+    except usb.USBError as err:
         if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
             raise err
         print 'payload transfer failed, retrying'
@@ -60,7 +60,7 @@ try:
     while True:
         try:
             data = ep.read(8, 100)
-        except usb.USBError, err:
+        except usb.USBError as err:
             if err.args != (110, 'Operation timed out'):
                 raise err
             continue
