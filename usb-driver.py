@@ -26,8 +26,8 @@ while True:
         assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload, 100) == len(payload)
         break
     except usb.USBError, err:
-    	if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
-    		raise err
+        if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
+            raise err
         print 'payload transfer failed, retrying'
 print 'Payload sent'
 
@@ -58,12 +58,12 @@ ui = UInput(cap, name='boogie-board-sync-pen')
 
 try:
     while True:
-    	try:
-        	data = ep.read(8, 100)
+        try:
+            data = ep.read(8, 100)
         except usb.USBError, err:
-        	if err.args != (110, 'Operation timed out'):
-        		raise err
-        	continue
+            if err.args != (110, 'Operation timed out'):
+                raise err
+            continue
 
         xpos = data[1] | data[2] << 8
         ypos = data[3] | data[4] << 8
