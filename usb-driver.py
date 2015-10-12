@@ -25,11 +25,11 @@ while True:
     try:
         assert dev.ctrl_transfer(0x21, 0x09, 0x0305, 1, payload, 100) == len(payload)
         break
-    except usb.USBError, err:
-    	if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
-    		raise err
-        print 'payload transfer failed, retrying'
-print 'Payload sent'
+    except usb.USBError as err:
+        if err.args != (110, 'Operation timed out') and err.args != (32, 'Pipe error'):
+            raise err
+        print('payload transfer failed, retrying')
+print('Payload sent')
 
 # Pull out interrupt endpoint
 cfg = dev[0]
@@ -58,28 +58,28 @@ ui = UInput(cap, name='boogie-board-sync-pen')
 
 try:
     while True:
-    	try:
-        	data = ep.read(8, 100)
-        except usb.USBError, err:
-        	if err.args != (110, 'Operation timed out'):
-        		raise err
-        	continue
+        try:
+            data = ep.read(8, 100)
+        except usb.USBError as err:
+            if err.args != (110, 'Operation timed out'):
+                raise err
+            continue
 
         xpos = data[1] | data[2] << 8
         ypos = data[3] | data[4] << 8
 
         if xpos < minxpos:
             minxpos = xpos
-            print 'updated minxpos to %d' % minxpos
+            print('updated minxpos to %d' % minxpos)
         if xpos > maxxpos:
             maxxpos = xpos
-            print 'updated maxxpos to %d' % maxxpos
+            print('updated maxxpos to %d' % maxxpos)
         if ypos < minypos:
             minypos = ypos
-            print 'updated minypos to %d' % minypos
+            print('updated minypos to %d' % minypos)
         if ypos > maxypos:
             maxypos = ypos
-            print 'updated maxypos to %d' % maxypos
+            print('updated maxypos to %d' % maxypos)
 
         pressure = data[5] | data[6] << 8
         touch = data[7] & 0x01
