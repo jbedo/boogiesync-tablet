@@ -48,11 +48,9 @@ maxpressure = 255
 cap = {
     e.EV_KEY : (e.BTN_TOUCH, e.BTN_STYLUS2),
     e.EV_ABS : [
-        # N.B.: There appears to be a mapping bug here; setting min to max results in
-        # setting max when reading back ui capabilities.
-        (e.ABS_PRESSURE, AbsInfo(value=minpressure, min=maxpressure, max=0, fuzz=0, flat=0, resolution=0)),
-        (e.ABS_X, AbsInfo(value=minxpos, min=maxxpos, max=0, fuzz=0, flat=0, resolution=0)),
-        (e.ABS_Y, AbsInfo(value=minypos, min=maxypos, max=0, fuzz=0, flat=0, resolution=0))]
+        (e.ABS_PRESSURE, AbsInfo(value=minpressure, max=maxpressure, min=0, fuzz=0, flat=0, resolution=0)),
+        (e.ABS_X, AbsInfo(value=minxpos, max=maxxpos, min=0, fuzz=0, flat=0, resolution=0)),
+        (e.ABS_Y, AbsInfo(value=minypos, max=maxypos, min=0, fuzz=0, flat=0, resolution=0))]
 }
 ui = UInput(cap, name='boogie-board-sync-pen')
 
