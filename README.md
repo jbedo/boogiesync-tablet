@@ -18,10 +18,3 @@ days, so it may be unstable.
 For the USB app, plug in the device and run the app. If you get timeout errors see the bugs below.
 
 For bluetooth, it should scan for your device so simply running it should work.  If not, run blue.py with a specific address (e.g., ./blue.py 00:00:00:00:00:00) which you can discover using "hcitool scan".
-
-# Bugs
-
-## PyUSB
-
-- Haven't quite worked out handshaking.  You may need to let the device connect to your phone to initialise prior to plugging in and running the usb app.
-
