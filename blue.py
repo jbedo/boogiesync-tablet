@@ -62,17 +62,32 @@ cap = {
     e.EV_ABS : [
         (e.ABS_PRESSURE, AbsInfo(value=minpressure, max=maxpressure, min=0, fuzz=0, flat=0, resolution=0)),
         (e.ABS_X, AbsInfo(value=minxpos, max=maxxpos, min=0, fuzz=0, flat=0, resolution=0)),
-        (e.ABS_Y, AbsInfo(value=minxpos, max=maxypos, min=0, fuzz=0, flat=0, resolution=0))]
+        (e.ABS_Y, AbsInfo(value=minypos, max=maxypos, min=0, fuzz=0, flat=0, resolution=0))]
 }
-ui = UInput(cap, name='boogie-board-sync')
+ui = UInput(cap, name='boogie-board-sync-pen')
 
 try:
     while True:
         data = list(bytearray(sock.recv(1024)))
         if len(data) != 14 or data[0] != 192 or data[1] != 1 or data[2] != 161:
             continue
+
         xpos = data[4] | data[5] << 8
         ypos = data[6] | data[7] << 8
+
+       if xpos < minxpos:
+            minxpos = xpos
+            print('updated minxpos to %d' % minxpos)
+        if xpos > maxxpos:
+            maxxpos = xpos
+            print('updated maxxpos to %d' % maxxpos)
+        if ypos < minypos:
+            minypos = ypos
+            print('updated minypos to %d' % minypos)
+        if ypos > maxypos:
+            maxypos = ypos
+            print('updated maxypos to %d' % maxypos)
+
         touch = data[10] & 0x01
         stylus = (data[10] & 0x02) >> 1
         pressure = touch * (data[8] | data[9] << 8)
