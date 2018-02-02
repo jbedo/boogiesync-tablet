@@ -75,7 +75,7 @@ try:
         xpos = data[4] | data[5] << 8
         ypos = data[6] | data[7] << 8
 
-       if xpos < minxpos:
+        if xpos < minxpos:
             minxpos = xpos
             print('updated minxpos to %d' % minxpos)
         if xpos > maxxpos:
